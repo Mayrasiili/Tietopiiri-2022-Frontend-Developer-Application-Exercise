@@ -1,25 +1,35 @@
-import logo from './logo.svg';
+import React from "react";
+import 'antd/dist/antd.css';
 import './App.css';
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Link, Routes, Route } from "react-router-dom";
+import Targetdetail from "./pages/Targetdetail";
+import Targetlist from "./pages/Targetlist";
 
-function App() {
+
+export default function App() {
+    const [targetdata,setTargetdata]= React.useState (false);
+    const [errorstate, setErrorstate]= React.useState (false);
+    React.useEffect (()=>{
+        fetch('https://test.tpfons.fi/tpdemo/ext/back/api/v1-0000/donation/targets')
+          .then(response => response.json())
+          .then(data => setTargetdata(data.giftTargets))
+          .catch(e => setErrorstate(true));
+    },[])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1 id="appHeader">Tietopiiri 2022 Frontend Developer Application Exercise</h1>
+      {errorstate && <>
+          A eroori has'd'd'd ocuured
+      </>}
+      {(errorstate===false && targetdata) &&
+        <Routes>
+          <Route path="Target/:targetId" element={<Targetdetail data={targetdata} />} />
+          <Route path="/" element={ <Targetlist data={targetdata} /> } />
+        </Routes>
+        }
+        {(errorstate ===false && !targetdata) && <div id="appLoader"> <Spin indicator={<LoadingOutlined style={{ fontSize: 60 }} spin />} /> </div>}
     </div>
   );
 }
-
-export default App;
