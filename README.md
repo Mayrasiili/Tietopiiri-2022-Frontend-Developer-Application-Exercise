@@ -1,6 +1,6 @@
 # Tietopiiri 2022 Frontend Developer Application Exercise
 
-Introduction
+## Introduction
 
 Node.js React-application built with Ant Design UI-framework.
 
